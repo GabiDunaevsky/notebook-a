@@ -4,16 +4,13 @@
 #include <stdexcept>
 #include <iostream>
 #include <string>
+#include <map>
+#include <vector>
 
 using namespace std;
 
 namespace ariel
 {   
-    // Default and minimal size for a message board
-    const int DEFAULT_SIZE = 1000;
-    const int MIN_SIZE = 1;
-    
-
     // Constructor
     Notebook::Notebook(){   
     }
@@ -21,41 +18,45 @@ namespace ariel
     // Destructor
     Notebook::~Notebook(){}
 
-    
-    void Notebook::write(int page, int row, int column,Direction dir , string word){
+    // write function throwing all the exceptions.
+    void Notebook::write(int page, int row, int column,Direction dir , string const & word){
         int wLen = word.size();
-        if(column >= 100){throw invalid_argument("Your massage is over the row limit.");}
+        if (word.find('~') != string::npos){
+        throw invalid_argument( "the char '~' can't be written" );
+    }
+    
+        // string place=read(page, row, column, dir, word.length());
+        // bool ans= true;
+        // for (char c : place) {
+        //     if(c !='_') {
+        //     ans = false;
+        //     }
+        // }
+        // if(!ans){
+        //     throw invalid_argument( "This place is already writen" );
+        // }
+
+
+        if(column >= maxColLen){throw invalid_argument("Your massage is over the row limit.");}
         if(column + wLen > maxColLen && dir == Direction::Horizontal){ throw invalid_argument("Your massage is over the row limit.");}
-        if(checkNegativity(page) || checkNegativity(row) || checkNegativity(column)){ throw invalid_argument("One of your params is negative.");}
-        return;
+        if(page < 0|| row < 0 || column < 0){ throw invalid_argument("One of your params is negative.");}
     }
 
-    // This method get row, column, direction and length of a message as parameters and returns the message in the 
-    // appropriate location and diraction in this message board
+    // read function throwing all the exceptions.
     string Notebook::read( int page,int row,  int column, Direction dir, int len){
-        if(column >= 100){throw invalid_argument("Your massage is over the row limit.");}
+        if(column >= maxColLen){throw invalid_argument("Your massage is over the row limit.");}
         if(column + len > maxColLen && dir == Direction::Horizontal ){ throw invalid_argument("Your massage is over the row limit.");}
-        if(checkNegativity(page) || checkNegativity(row) || checkNegativity(column)){ throw invalid_argument("One of your params is negative.");}
+        if(page < 0 || row < 0 || column < 0){ throw invalid_argument("One of your params is negative.");}
         return " ";
     }
-
+// erase function throwing all the exceptions.
     void Notebook::erase( int page, int row,  int column, Direction dir,  int len){
-        if(column >= 100){throw invalid_argument("Your massage is over the row limit.");}
+        if(column >= maxColLen){throw invalid_argument("Your massage is over the row limit.");}
         if(column +len > maxColLen && dir == Direction::Horizontal ){ throw invalid_argument("Your massage is over the row limit.");}
-        if(checkNegativity(page) || checkNegativity(row) || checkNegativity(column)){ throw invalid_argument("One of your params is negative.");}
-        return;
+        if(page < 0 || row < 0|| column < 0){ throw invalid_argument("One of your params is negative.");}
     }
 
-    // This message will print out the entire message board
+    
     void Notebook::show(int page){
     }
-
-
-    bool Notebook::checkNegativity(int j){
-        if(j < 0) 
-        {
-            return true;
-         }
-        return false;
-        }
 }
