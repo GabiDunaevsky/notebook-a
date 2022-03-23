@@ -21,11 +21,11 @@ namespace ariel
     // Destructor
     Notebook::~Notebook(){}
 
-    // This method will get row, column, direction and a message as parameters and posts the message in the 
-    // appropriate location and diraction in this message board
+    
     void Notebook::write(int page, int row, int column,Direction dir , string word){
         int wLen = word.size();
-        if(column + wLen >= maxColLen ){ throw invalid_argument("Your massage is over the row limit.");}
+        if(column >= 100){throw invalid_argument("Your massage is over the row limit.");}
+        if(column + wLen > maxColLen && dir == Direction::Horizontal){ throw invalid_argument("Your massage is over the row limit.");}
         if(checkNegativity(page) || checkNegativity(row) || checkNegativity(column)){ throw invalid_argument("One of your params is negative.");}
         return;
     }
@@ -33,13 +33,15 @@ namespace ariel
     // This method get row, column, direction and length of a message as parameters and returns the message in the 
     // appropriate location and diraction in this message board
     string Notebook::read( int page,int row,  int column, Direction dir, int len){
-        if(column + len > maxColLen ){ throw invalid_argument("Your massage is over the row limit.");}
+        if(column >= 100){throw invalid_argument("Your massage is over the row limit.");}
+        if(column + len > maxColLen && dir == Direction::Horizontal ){ throw invalid_argument("Your massage is over the row limit.");}
         if(checkNegativity(page) || checkNegativity(row) || checkNegativity(column)){ throw invalid_argument("One of your params is negative.");}
         return " ";
     }
 
     void Notebook::erase( int page, int row,  int column, Direction dir,  int len){
-        if(column +len > maxColLen ){ throw invalid_argument("Your massage is over the row limit.");}
+        if(column >= 100){throw invalid_argument("Your massage is over the row limit.");}
+        if(column +len > maxColLen && dir == Direction::Horizontal ){ throw invalid_argument("Your massage is over the row limit.");}
         if(checkNegativity(page) || checkNegativity(row) || checkNegativity(column)){ throw invalid_argument("One of your params is negative.");}
         return;
     }

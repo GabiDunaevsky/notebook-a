@@ -19,7 +19,7 @@ using ariel::Direction;
 TEST_CASE("Good input for write") {
 
     srand(time(NULL));
-    Direction dir;
+    Direction dir = Direction:: Horizontal;
     Notebook nt;
 
     for(int i = 0 ; i < 5; i++){
@@ -27,14 +27,11 @@ TEST_CASE("Good input for write") {
         int row = rand();
         int page = rand();
         string msg = "Hello";
-        if(i%2 == 0) {
-            dir = Direction:: Horizontal;
-        }else{
-            dir = Direction::Vertical; 
-        }
-        CHECK_NOTHROW(nt.write(page,row,col,dir,msg));  
+        CHECK_NOTHROW(nt.write(page,row,col,dir,msg));
+        
     }
-    CHECK_NOTHROW(nt.write(0,99,0,Direction:: Horizontal,"a")); // last place starting from 0.
+    CHECK_NOTHROW(nt.write(0,0,99,Direction:: Horizontal,"a")); // last place starting from 0.
+    CHECK_NOTHROW(nt.write(0,0,99,Direction:: Vertical,"aggergege"));// if it is vertical it dosent matter
 }
 
 TEST_CASE("Good input for read and erase") {
@@ -60,6 +57,8 @@ TEST_CASE("Good input for read and erase") {
     CHECK_NOTHROW(nt.erase(0,0,99,Direction:: Horizontal,1)); // last place starting from 0.
     CHECK_NOTHROW(nt.read(0,0,0,Direction:: Horizontal,100)); // first place starting from 0.
     CHECK_NOTHROW(nt.erase(0,0,0,Direction:: Horizontal,100));// first place starting from 0.
+    CHECK_NOTHROW(nt.erase(0,0,99,Direction:: Vertical,100));// Vertical dosent matter
+    CHECK_NOTHROW(nt.erase(0,0,0,Direction:: Vertical,100));// Vertical dosent matter
 }
 
 
@@ -89,7 +88,7 @@ TEST_CASE("Page, colum or row are negativ(write,read ,erase)") {
         }
         CHECK_THROWS(nt.write(page,row,col,dir,msg));
         CHECK_THROWS(nt.read(page,row,col,dir,len));
-        CHECK_THROWS(nt.erase(page,row,col,dir,len));  
+        CHECK_THROWS(nt.erase(page,row,col,dir,len)); 
     }
     CHECK_THROWS(nt.write(-4,-1,0,Direction:: Horizontal,"hi"));
     CHECK_THROWS(nt.write(-4,3,-2,Direction:: Horizontal,"hjk"));
@@ -114,6 +113,7 @@ TEST_CASE("Bad stringLen input") {
         s+='s';
     }
     CHECK_THROWS(nt.write(5,4,1,Direction:: Horizontal,s));
+    
     for(int j = 0; j < 5;++j){
         string sm ;
         int loc = rand()%100;
@@ -142,6 +142,19 @@ TEST_CASE("wrong len to read or erase") {
         CHECK_THROWS(nt.read(0,0,0,Direction:: Horizontal,101));
         CHECK_THROWS(nt.erase(0,0,0,Direction:: Horizontal,101));
 }
+
+TEST_CASE("wrong column num (read, erase or write)") {
+    Notebook nt;
+
+    CHECK_THROWS(nt.write(0,0,124,Direction:: Horizontal , "hello" ));
+    CHECK_THROWS(nt.write(0,0,100,Direction:: Vertical , "hello" ));
+    CHECK_THROWS(nt.erase(0,0,100,Direction:: Horizontal , 7 ));
+    CHECK_THROWS(nt.erase(0,0,1134,Direction:: Vertical , 4 ));
+    CHECK_THROWS(nt.read(0,0,355,Direction:: Vertical , 9 ));
+    CHECK_THROWS(nt.read(0,0,100,Direction:: Vertical , 18 ));
+}
+
+
 
 
 
